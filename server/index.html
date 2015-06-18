@@ -1,6 +1,7 @@
 <html>
 <head>
 	<script src="interact-1.2.4.min.js"></script>
+	<script src="jquery-1.11.3.min.js"></script>
 	<style>
 	html, body {
 		height: 100%;
@@ -13,8 +14,8 @@
 	}
 	
 	.elem {
-		width: 10%;
-		height: 10%;
+		width: 5%;
+		height: 5%;
 		margin: 10%;
 		background-color: #29e;
 		color: white;
@@ -29,18 +30,37 @@
 		font-weight: bold;
 	}
 	</style>
+	
 </head>
 <body>
 <div id="space">
-	<div id="drag-1" class="draggable elem">
+	<!--div id="drag-1" class="draggable elem">
 	  <p> You can drag one element </p>
 	</div>
 	<div id="drag-2" class="draggable elem">
 		<p> with each pointer </p>
-	</div>
+	</div-->
 </div>
 
 <script>
+
+$(function(){
+    $.ajax({
+        url: '/service/space/0', //the URL to your node.js server that has data
+        dataType: 'json',
+        cache: false
+    }).done(function(data){
+        //"data" will be JSON. Do what you want with it. 
+        //alert(data);
+		console.log(data);
+		for(i = 0; i < data.concepts.length; i++) {
+			$('#space').append('<div id="' + data.concepts[i].id + '" style="position:absolute;left:' + data.concepts[i].loc[0] + 'px;top:' + data.concepts[i].loc[1] + 'px" class="draggable elem"><p>' + data.concepts[i].name + '</p></div>');
+		}
+    }); 
+});
+
+
+
 // target elements with the "draggable" class
 interact('.draggable')
   .draggable({
@@ -57,12 +77,13 @@ interact('.draggable')
     onmove: dragMoveListener,
     // call this function on every dragend event
     onend: function (event) {
-      var textEl = event.target.querySelector('p');
+      /*var textEl = event.target.querySelector('p');
 
       textEl && (textEl.textContent =
         'moved a distance of '
         + (Math.sqrt(event.dx * event.dx +
                      event.dy * event.dy)|0) + 'px');
+					 */
     }
   });
 

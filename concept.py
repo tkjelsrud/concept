@@ -10,6 +10,28 @@ class Space:
 		self.name = ""
 		self.concepts = []
 		
+		# Create some dummy data
+		c = Concept()
+		c.id = 0
+		c.loc = (150,150)
+		c.name = "Test"
+		c2 = Concept()
+		c2.id = 1
+		c2.loc = (350,50)
+		c2.name = "Test 123"
+		
+		self.concepts.append(c)
+		self.concepts.append(c2)
+	
+	def getConceptById(self, cId):
+		for c in self.concepts:
+			if int(c.id) == int(cId):
+				return c
+		return None
+	
+	def to_JSON(self):
+		return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+		
 class EventRunner:
 	def __init__(self):
 		self.events = []
@@ -50,6 +72,7 @@ class Concept:
 		self.id = ""
 		self.name = ""
 		self.log = Log()
+		self.loc = (0, 0)
 		self.settings = {}
 		
 		self.triggerEvents = []
@@ -171,10 +194,10 @@ class HttpRequest(Concept):
 		
 		return True
 
-h = HttpRequest()
-h.setSetting("input.scheme", "https")
-h.setSetting("input.host", "s.utv.vegvesen.no")
-h.setSetting("input.path", "/ws/no/vegvesen/admin/subjekt/person/PersonTjeneste/v1")
+#h = HttpRequest()
+#h.setSetting("input.scheme", "https")
+#h.setSetting("input.host", "s.utv.vegvesen.no")
+#h.setSetting("input.path", "/ws/no/vegvesen/admin/subjekt/person/PersonTjeneste/v1")
 
 
 
