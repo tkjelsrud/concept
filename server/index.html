@@ -34,27 +34,20 @@
 </head>
 <body>
 <div id="space">
-	<!--div id="drag-1" class="draggable elem">
-	  <p> You can drag one element </p>
-	</div>
-	<div id="drag-2" class="draggable elem">
-		<p> with each pointer </p>
-	</div-->
+
 </div>
 
 <script>
 
 $(function(){
     $.ajax({
-        url: '/service/space/0', //the URL to your node.js server that has data
+        url: '/service/space/0',
         dataType: 'json',
         cache: false
     }).done(function(data){
-        //"data" will be JSON. Do what you want with it. 
-        //alert(data);
-		console.log(data);
+		//console.log(data);
 		for(i = 0; i < data.concepts.length; i++) {
-			$('#space').append('<div id="' + data.concepts[i].id + '" style="position:absolute;left:' + data.concepts[i].loc[0] + 'px;top:' + data.concepts[i].loc[1] + 'px" class="draggable elem"><p>' + data.concepts[i].name + '</p></div>');
+			$('#space').append('<div id="' + data.concepts[i].id + '" style="position:absolute;left:' + data.concepts[i].loc[0] + 'px;top:' + data.concepts[i].loc[1] + 'px;width:' + data.concepts[i].size[0] + 'px;height:' + data.concepts[i].size[1] + 'px" class="draggable elem"><p>' + data.concepts[i].name + '</p></div>');
 		}
     }); 
 });
@@ -84,6 +77,7 @@ interact('.draggable')
         + (Math.sqrt(event.dx * event.dx +
                      event.dy * event.dy)|0) + 'px');
 					 */
+					 
     }
   });
 
@@ -101,6 +95,16 @@ interact('.draggable')
     // update the posiion attributes
     target.setAttribute('data-x', x);
     target.setAttribute('data-y', y);
+  }
+  
+  function postData(data) {
+	$.ajax({
+		type: "POST",
+		url: "/service/",
+		data: data,
+		success: success,
+		dataType: 'json'
+	});
   }
 
   // this is used later in the resizing demo

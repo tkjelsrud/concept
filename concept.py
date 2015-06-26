@@ -14,10 +14,12 @@ class Space:
 		c = Concept()
 		c.id = 0
 		c.loc = (150,150)
+		c.size = (100,80)
 		c.name = "Test"
 		c2 = Concept()
 		c2.id = 1
 		c2.loc = (350,50)
+		c2.size = (100,80)
 		c2.name = "Test 123"
 		
 		self.concepts.append(c)
@@ -73,6 +75,7 @@ class Concept:
 		self.name = ""
 		self.log = Log()
 		self.loc = (0, 0)
+		self.size = (100, 100) #Size, in px
 		self.settings = {}
 		
 		self.triggerEvents = []

@@ -32,7 +32,28 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 		self.wfile.write(bytes(content, 'UTF-8'))
 		
 		self.responded = True
-	
+
+	def do_POST(self):
+		try:
+			if(self.path.startswith("/service/")):
+				
+				ar = self.path.split("?")
+				pt = ar[0].split("/")
+				
+				if(len(pt) == 4 and pt[2] == "space"):
+					sId = int(pt[3])
+					if sId >= 0 and sId < len(Memory.spaces):
+						print(str(Memory.spaces[sId].__dict__))
+						print(self)
+			
+			if not self.responded:
+				# Default response
+				http.server.SimpleHTTPRequestHandler.do_POST(self)
+		
+		except:
+			print("Unexpected error:" + str(sys.exc_info()[0]))
+			raise
+		
 	def do_GET(self):	
 		try:
 			if(self.path.startswith("/service/")):
@@ -46,12 +67,19 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 						print(str(Memory.spaces[sId].__dict__))
 						self.respond(MyEncoder().encode(Memory.spaces[sId]))
 				
-				if(len(pt) == 6 and pt[2] == "space" and pt[4] == "concept"):	
+				if(len(pt) >= 6 and pt[2] == "space" and pt[4] == "concept"):	
 					sId = int(pt[3])
 					cId = int(pt[5])
+					
 					if sId >= 0 and sId < len(Memory.spaces):
 						c = Memory.spaces[sId].getConceptById(cId)
-						if c:
+						
+						if(c and len(pt) > 6 and pt[6] == "run"):
+							c.preRun()
+							c.run()
+							c.postRun()
+							self.respond(MyEncoder().encode(c.log))
+						elif c:
 							self.respond(MyEncoder().encode(c))
 			
 			if not self.responded:
