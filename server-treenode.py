@@ -6,6 +6,8 @@ import json
 from json import JSONEncoder
 import sys
 import unittest
+import concept
+from threading import Timer
 
 PORT = 8000
 
@@ -55,6 +57,7 @@ class Node:
 class Memory:
     root = Node()
     file = "server-treenode.dat"
+    tmSec = 10
     
     @staticmethod
     def searchTree(chain, create=False):
@@ -87,6 +90,30 @@ class Memory:
             db['root'] =  Memory.root
         
         return True
+    
+    @staticmethod
+    def tick():
+        print("Tick tock!")
+        
+        # Scan through nodes for concepts that should run (schedule)
+        
+        # Propagate output (result) from run into the node
+        
+        Timer(Memory.tmSec, Memory.tick, ()).start()
+
+    @staticmethod
+    def findConcepts():
+        nList = []
+        
+        if concept in Memory.root:
+            nList.append(Memory.root)
+        
+        #for c in Memory.root.children:
+        # recursion :/    
+            
+        
+        return True
+        
         
 class Handler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, request, client_address, server):
@@ -142,6 +169,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         try:
             if(self.path.startswith("/nodes/")):
                 ar = self.path.split("?")
+                
                 pt = ar[0].split("/")
                 
                 nd = Memory.searchTree(pt[2:])
@@ -185,7 +213,11 @@ class TreeNodeTests(unittest.TestCase):
 #if __name__ == '__main__':
 #unittest.main()
 
-Memory.load()
+def print_time():
+    print("Timer!")
+
+Memory.load() # Load data
+Memory.tick() # Start timer
             
 httpd = socketserver.TCPServer(("", PORT), Handler)
 
